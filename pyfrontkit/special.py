@@ -1,4 +1,4 @@
-# pyfront/void_element.py
+# 
 
 # Copyright (C) [2025] Eduardo Antonio Ferrera Rodríguez
 #
@@ -9,7 +9,7 @@
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; see the COPYING file for more details.
 
-# pyfront/special.py
+# pyfrontkit/special.py
 
 from .void_element import Source, Track, Img, Param
 from .css import CSSRegistry

@@ -11,7 +11,7 @@
 # but WITHOUT ANY WARRANTY. See the COPYING file for more details.
 
 
-# pyfront/tags.py
+# pyfrontkit/tags.py
 
 from .block import Block
 

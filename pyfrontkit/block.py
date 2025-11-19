@@ -1,4 +1,3 @@
-# [your_file].py
 
 # Copyright (C) [2025] Eduardo Antonio Ferrera Rodríguez
 #
@@ -9,7 +8,10 @@
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY. See the COPYING file for more details.
 
-# pyfront/block.py
+
+# pyfrontkit/block.py
+
+# pyfrontkit/block.py
 
 from .content import ContentFactory
 from .dom import DOM
@@ -38,7 +40,10 @@ class Block:
     - Registers in DOM if an id is present
     - Registers selectors in CSS (tag, id, classes and cascades)
     - Allows adding children only if an id is present
+    - All blocks are registered globally to respect creation order
     """
+
+    _registry = []
 
     def __init__(self, tag: str, *children: Any, _parent=None, **kwargs):
         self.tag = tag
@@ -63,6 +68,9 @@ class Block:
         # Register in CSS
         CSSRegistry.register_block(self)
 
+        # Registrar en lista global para mantener orden de creación
+        Block._registry.append(self)
+
     # ------------------------------
     # Attribute extraction and validation
     # ------------------------------
@@ -75,6 +83,12 @@ class Block:
             # Normalize class_
             if key == "class_":
                 key = "class"
+
+            # Always allow 'style'
+            if key == "style":
+                if value not in (None, False):
+                    attrs[key] = value
+                continue
 
             # Validate against global list
             if key not in VALID_HTML_ATTRS:
@@ -98,9 +112,6 @@ class Block:
     # Adding children
     # ------------------------------
     def add_child(self, *children):
-        """
-        Adds children to this block only if it has an id.
-        """
         if not self.attrs.get("id"):
             raise RuntimeError(f"The <{self.tag}> block does not have an id; it cannot contain children.")
 
@@ -112,11 +123,9 @@ class Block:
                 self._attach_child(ch)
 
     def _attach_child(self, child):
-        # Assign parent
         if isinstance(child, Block):
             child._parent = self
 
-        # Block, ContentItem or string
         if hasattr(child, "render"):
             if isinstance(child, Block):
                 CSSRegistry.register_block(child)

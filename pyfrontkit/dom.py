@@ -1,4 +1,3 @@
-# [your_file].py
 
 # Copyright (C) [2025] Eduardo Antonio Ferrera Rodríguez
 #
@@ -11,7 +10,7 @@
 # but WITHOUT ANY WARRANTY. See the COPYING file for more details.
 
 
-# pyfront/dom.py
+# pyfrontkit/dom.py
 # Simple global DOM manager and generator of functions by id (accumulative).
 
 from typing import Dict, Optional

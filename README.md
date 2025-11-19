@@ -1,90 +1,225 @@
-# PYFRONT: DSL for Programmatic Web Generation
+# PYFRONTKIT  
+### A Pythonic DSL for Programmatic HTML & CSS Generation
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
-**PYFRONT** is a Python library designed to programmatically generate **HTML and CSS** web structures. It acts as a **Domain-Specific Language (DSL)**, allowing developers to build complete web pages using only clean Python syntax.
+**PyFrontKit** is a Python-based DSL designed to generate **HTML and CSS programmatically**, providing a clean, elegant, and highly readable syntax inspired by modern component-driven development.
 
-Its main goal is **rapid prototyping** and the creation of simple frontends, ideal for Data Apps, documentation, or visualizing results in Machine Learning environments.
+It allows developers to build complete web pages using **pure Python**, without writing raw HTML manually.  
+Ideal for:
 
----
-
-## Key Features
-
-* **Fluent Block Syntax:** HTML tags are represented as Classes or Functions (`Div`, `div`), keeping all logic entirely in Python.
-* **Accumulative DOM Manager:** A unique feature that converts any block’s `id` into a global function. This allows adding children (`Div(id="parent"); parent(Child1, Child2)`) without recursive nesting.
-* **Automatic CSS Generation:** The system tracks all used `id`, `class`, and `tags` to automatically generate a `style.css` file with **all selectors ready** to be filled.
-* **Native JS Support:** Allows inclusion of scripts via the `Script` class.
-* **Final Rendering:** Produces `index.html` and `style.css` ready to serve.
+- rapid prototyping  
+- teaching HTML structure  
+- generating static sites  
+- automating documentation pages  
+- template-driven UI generation  
 
 ---
 
-## Installation
+# 🚀 Features
 
-Install FRONTPY directly from the GitHub repository:
+### ✔ Pythonic HTML Syntax  
+Create elements using class constructors or ID-based global functions:
 
-```bash
-pip install git+https://github.com/Edybrown/FrontPy.git
+```python
+Div(id="container")
+container(Section(ctn_p="Hello World"))
+```
+
+### ✔ Accumulative DOM  
+Any element with an `id="..."` automatically generates a global callable:
+
+```python
+header(Div(ctn_h1="Welcome"))
+```
+
+### ✔ Automatic CSS File Generation  
+All selectors (`id`, `class`, and tag names) are scanned and exported into `style.css`.
+
+### ✔ Inline Style Support  
+Every tag accepts a native HTML5 `style="..."` attribute.
+
+### ✔ Clean Separation Between Content & Structure  
+`ctn_p`, `ctn_h1`, `ctn_div`, etc. allow pythonic, newline-based content — internally converted to `<p>`, `<br>`, `<h1>`, etc.
+
+### ✔ Ready-to-open Output  
+The library produces:
+
+```
+index.html
+style.css
 ```
 
 ---
 
-## 💡 Usage Example (Professional Page)
+# 📦 Installation
 
-The following Python code generates a semantic page structure and its associated stylesheet (`style.css`):
+### From PyPI (recommended)
+
+```bash
+pip install pyfrontkit
+```
+
+### From GitHub
+
+```bash
+pip install git+https://github.com/Edybrown/pyfrontkit.git
+```
+
+---
+
+# 💡 Basic Usage Example
 
 ```python
-from pyfront import HtmlDoc, Div, Section, Header, Nav, Ul, Li 
+from pyfrontkit import HtmlDoc, Div, Section, Header, Nav, Ul, Li, Footer
 
 doc = HtmlDoc(title="My Professional Page")
 
+# Header
 Header(id="header", ctn_p="Welcome to My Professional Site",
        style="background-color:#2c3e50; color:white; padding:20px 0;")
 
+# Navigation
 Nav(id="nav", style="background-color:#34495e; display:flex; justify-content:center;")
-# The id "nav" becomes the function nav()
 nav(
     Div(ctn_p="Home", style="color:white; padding:15px 25px;"),
-    Div(ctn_p="Services", style="color:white; padding:15px 25px;"),
+    Div(ctn_p="Services", style="color:white; padding:15px 25px;")
 )
 
+# Introduction
 Section(id="intro", style="padding:40px 20px; max-width:1000px; margin:auto;")
 intro(
-    Div(ctn_p="This is the introduction section, generated without HTML code."),
+    Div(ctn_p="This is the introduction section, generated entirely in Python.")
 )
 
-Section(id="servicios", style="padding:40px 20px; max-width:1000px; margin:auto;")
-servicios(
-    Ul(id="lista_servicios")
-)
-lista_servicios(
-    Li(ctn_p="Custom web development"),
-    Li(ctn_p="Technology consulting")
-)
-
+# Footer
 Footer(id="footer", style="background-color:#2c3e50; color:white; text-align:center; padding:20px 0;")
-footer(Div(ctn_p="© 2025 My Professional Site. All rights reserved."))
+footer(
+    Div(ctn_p="© 2025 My Professional Site. All rights reserved.")
+)
 
+# Build files
 doc.create_document()
+```
+
+Output generated:
+
+```
+index.html
+style.css
 ```
 
 ---
 
-## ⚖️ License
+# 🎨 CSS Usage Guide
 
-This project is released under the **GNU General Public License version 3.0 (GPLv3)**.
+PyFrontKit automatically generates a `style.css` file containing **all selectors found in the HTML**:
 
-* Allows free use, modification, and redistribution.
-* Requires that any software using FRONTPY or its derivatives also be free software (copyleft).
+Example auto-generated output:
 
-See the `COPYING` file for the full license text.
+```css
+#header {}
+#nav {}
+#intro {}
+#footer {}
+div {}
+section {}
+```
+
+You can now fill these selectors manually:
+
+```css
+#header {
+    background:#2c3e50;
+    color:white;
+    padding:20px 0;
+}
+```
+
+## Styling methods
+
+### 1. Inline Styles (fast prototyping)
+
+```python
+Div(ctn_p="Hello", style="color:red; margin-top:10px;")
+```
+
+### 2. External CSS File (recommended)
+
+Edit the generated `style.css`:
+
+```css
+div {
+    font-family: Arial, sans-serif;
+}
+```
 
 ---
 
-## 🙋 About the Author
+# 📁 Examples (with screenshots)
 
-This project was created by **Eduardo Antonio Ferrera Rodríguez** as part of an advanced learning journey in Python, *Object-Oriented Programming* (OOP), and library design.
+A full set of examples is included in the repository:
 
-If you have questions or want to contribute to FrontPy, you are welcome!
+```
+examples/
+│
+├── 01-basic/
+│   ├── example.py
+│   ├── index.html
+│   ├── style.css
+│   └── screenshot.png
+│
+├── 02-intermediate/
+│   ├── example.py
+│   ├── index.html
+│   ├── style.css
+│   └── screenshot.png
+│
+└── 03-professional/
+    ├── example.py
+    ├── index.html
+    ├── style.css
+    └── screenshot.png
+```
+
+Run any example:
+
+```bash
+python examples/03-professional/example.py
+```
 
 ---
+
+# 🛠 Roadmap
+
+Planned features:
+
+- ✔ **CSS Template Packs** (global themes)
+- ✔ **Automatic external CSS compilation**
+- ✔ **Reusable Python components**
+- ✔ **Dynamic `<script>` builder**
+- ✔ **Minified output mode**
+- ✔ **Plugin system for custom tags**
+
+---
+
+# 📄 License
+
+Released under the **GNU GPLv3** license.  
+You are free to use, modify, and redistribute this project.  
+Any derivative work must remain open-source under the same license.
+
+---
+
+# 👤 Author
+
+Created by **Eduardo Antonio Ferrera Rodríguez**  
+A project combining:
+
+- advanced Python OOP practice  
+- DSL design  
+- frontend structure understanding  
+- static web automation  
+
+Contributions, suggestions, and pull requests are welcome!
 

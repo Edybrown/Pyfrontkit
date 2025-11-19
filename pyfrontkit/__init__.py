@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 # Package Configuration
 # ----------------------------------------------------------------------
-__version__ = "0.3.0"
+__version__ = "0.9.0"
 __author__ = "Eduardo Antonio Ferrera Rodriguez"
 __license__ = "GPLv3"
 
@@ -12,12 +12,12 @@ __license__ = "GPLv3"
 # Core modules
 from .html_doc import HtmlDoc
 from .css import CSSRegistry
-from .block import Block, A  # <-- agregada la clase A
+from .block import Block
 
 # Tags
 from .tags import (
-    Div, Section, Article, Header, Footer, Nav, Main, Aside, Button, Form, Ul, Li,
-    div, section, article, header, footer, nav, main, aside, button, form, ul, li
+    Div, Section, Article, Header, Footer, Nav, Main, Aside, Button, Form, Ul, Li, A,
+    div, section, article, header, footer, nav, main, aside, button, form, ul, li, a
 )
 
 # Void elements

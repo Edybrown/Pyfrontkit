@@ -1,4 +1,4 @@
-# pyfront/void_element.py
+# pyfrontkit/void_element.py
 
 # Copyright (C) [2025] Eduardo Antonio Ferrera Rodríguez
 #

@@ -9,7 +9,7 @@
 # but WITHOUT ANY WARRANTY; see the COPYING file for more details.
 
 
-# pyfront/content.py
+# pyfrontkit/content.py
 
 class ContentItem:
     """

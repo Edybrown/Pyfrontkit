@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyfrontkit"
-version = "0.3.0"  # <-- actualizamos versión
+version = "0.9.0"  # <-- actualizamos versión
 description = "A Python tool to generate HTML and CSS with programmable syntax."
 readme = "README.md"
 
@@ -21,10 +21,10 @@ classifiers = [
 
 
 [project.urls]
-Homepage = "https://github.com/Edybrown/pyfront"
-Source = "https://github.com/Edybrown/pyfront"
-Issues = "https://github.com/Edybrown/pyfront/issues"
+Homepage = "https://github.com/Edybrown/pyfrontkit"
+Source = "https://github.com/Edybrown/pyfrontkit"
+Issues = "https://github.com/Edybrown/pyfrontkit/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["pyfront*"]
+include = ["pyfrontkit*"]
