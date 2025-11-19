@@ -1,8 +1,8 @@
-# FRONTPY: DSL for Programmatic Web Generation
+# PYFRONT: DSL for Programmatic Web Generation
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
-**FRONTPY** is a Python library designed to programmatically generate **HTML and CSS** web structures. It acts as a **Domain-Specific Language (DSL)**, allowing developers to build complete web pages using only clean Python syntax.
+**PYFRONT** is a Python library designed to programmatically generate **HTML and CSS** web structures. It acts as a **Domain-Specific Language (DSL)**, allowing developers to build complete web pages using only clean Python syntax.
 
 Its main goal is **rapid prototyping** and the creation of simple frontends, ideal for Data Apps, documentation, or visualizing results in Machine Learning environments.
 

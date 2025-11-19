@@ -1,13 +1,12 @@
-# [your_file].py
 
 # Copyright (C) [2025] Eduardo Antonio Ferrera Rodríguez
 #
 # This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the
-# Free Software Foundation, either version 3 of the License, or any later version.
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or any later version.
 #
 # This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY. See the COPYING file for more details.
+# but WITHOUT ANY WARRANTY; see the COPYING file for more details.
 
 
 # pyfront/content.py
@@ -16,15 +15,23 @@ class ContentItem:
     """
     Represents a simple content element:
     <tag>text</tag>
+    
+    Supports Python newline (\n) conversion into <br /> automatically.
     """
 
     def __init__(self, tag: str, text: str):
         self.tag = tag
-        self.text = text
+        self.lines = text.split("\n")  # split text by newline
 
     def render(self, indent: int = 0):
         space = " " * indent
-        return f"{space}<{self.tag}>{self.text}</{self.tag}>\n"
+        html = f"{space}<{self.tag}>"
+        for i, line in enumerate(self.lines):
+            html += line
+            if i < len(self.lines) - 1:
+                html += "<br />"
+        html += f"</{self.tag}>\n"
+        return html
 
 
 class ContentFactory:

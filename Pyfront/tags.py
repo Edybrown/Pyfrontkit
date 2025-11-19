@@ -67,6 +67,10 @@ class Li(Block):
     def __init__(self, *children, **kwargs):
         super().__init__("li", *children, **kwargs)
 
+class A(Block):
+    def __init__(self, *children, **kwargs):
+        super().__init__("a", *children, **kwargs)        
+
 # ============================================================
 #            FUNCTION ALIASES FOR FREE SYNTAX
 # ============================================================
@@ -106,3 +110,6 @@ def ul(*children, **kwargs):
 
 def li(*children, **kwargs):
     return Li(*children, **kwargs)
+
+def a(*children, **kwargs):
+    return A(*children, **kwargs)

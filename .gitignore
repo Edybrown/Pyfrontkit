@@ -1,0 +1,47 @@
+# ----------------------------
+# Python general
+# ----------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos temporales
+*.log
+*.tmp
+*.bak
+*.swp
+
+# ----------------------------
+# Entornos virtuales
+# ----------------------------
+venv/
+env/
+.venv/
+
+# ----------------------------
+# Archivos de compilación
+# ----------------------------
+build/
+dist/
+*.egg-info/
+*.egg
+
+# ----------------------------
+# Archivos de configuración locales
+# ----------------------------
+*.env
+*.ini
+*.cfg
+
+# ----------------------------
+# IDE / Editores
+# ----------------------------
+.vscode/
+.idea/
+*.code-workspace
+
+# ----------------------------
+# Otros
+# ----------------------------
+.DS_Store

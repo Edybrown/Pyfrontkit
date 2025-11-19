@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pyfront"
-version = "0.1.0"
+name = "pyfrontkit"
+version = "0.3.0"  # <-- actualizamos versión
 description = "A Python tool to generate HTML and CSS with programmable syntax."
 readme = "README.md"
 
@@ -19,10 +19,11 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+
 [project.urls]
-Homepage = "https://github.com/Edybrown/FrontPy"
-Source = "https://github.com/Edybrown/FrontPy"
-Issues = "https://github.com/Edybrown/FrontPy/issues"
+Homepage = "https://github.com/Edybrown/pyfront"
+Source = "https://github.com/Edybrown/pyfront"
+Issues = "https://github.com/Edybrown/pyfront/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
