@@ -4,21 +4,23 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyfrontkit"
-version = "1.1.5"  
-description = "A Python tool to generate HTML and CSS with programmale syntax."
+version = "1.1.6"
+description = "A Python tool to generate HTML and CSS with programmable syntax."
 readme = "README.md"
 
 authors = [
-    {name = "Eduardo Antonio Ferrera Rodríguez", email = "enzoferrera.23@gmail.com"},
+    { name = "Eduardo Antonio Ferrera Rodríguez", email = "enzoferrera.23@gmail.com" },
 ]
+
+license = { text = "MIT" }
 
 keywords = ["html", "css", "python", "frontend", "mlops", "data app"]
 
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License",
 ]
-
 
 [project.urls]
 Homepage = "https://github.com/Edybrown/pyfrontkit"

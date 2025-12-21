@@ -1,13 +1,7 @@
 # create_color.py
 
-# Copyright (C) [2025] Eduardo Antonio Ferrera Rodríguez
-#
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the
-# Free Software Foundation, either version 3 of the License, or any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY. See the COPYING file for more details.
+# Copyright (c) 2025 Eduardo Antonio Ferrera Rodríguez
+# SPDX-License-Identifier: MIT
 
 from . import colors_templates
 from . import palettes

@@ -1,19 +1,11 @@
-# pyfrontkit/void_element.py
-
-# Copyright (C) [2025] Eduardo Antonio Ferrera Rodríguez
-#
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the
-# Free Software Foundation, either version 3 of the License, or any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; see the COPYING file for more details.
+# Copyright (c) 2025 Eduardo Antonio Ferrera Rodríguez
+# SPDX-License-Identifier: MIT
 # pyfrontkit/void_element.py
 
 from .block import Block  # Registro global
 
 # =============================================================
-# CONSTANTES DE ATRIBUTOS VÁLIDOS PARA ELEMENTOS VOID
+# VALID ATTRIBUTE CONSTANTS FOR VOID ELEMENTS
 # =============================================================
 
 BASE_VOID_ATTRS = {"id",  "class", "style", "title", "data-", "aria-"}
