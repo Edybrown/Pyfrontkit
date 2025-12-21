@@ -7,6 +7,7 @@
 from pathlib import Path
 from typing import Any
 
+
 class CSSRegistry:
     """
     Simplified CSS selector registry for PyFrontKit.
@@ -17,11 +18,11 @@ class CSSRegistry:
     _tags = set()
     _ids = set()
     _classes = set()
-    _cascades = set() 
+    _cascades = set()
 
     _VOID_TAGS_TO_EXCLUDE = {
         "hr", "link", "source", "param", "track", "wbr", "base"
-    } 
+    }
 
     @classmethod
     def _get_child_tag(cls, child: Any) -> str | None:

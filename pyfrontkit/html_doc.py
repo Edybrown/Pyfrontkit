@@ -1,9 +1,13 @@
 # Copyright (c) 2025 Eduardo Antonio Ferrera Rodríguez
 # SPDX-License-Identifier: MIT
 
-from .dom import DOM
+
+from typing import Literal, Tuple, Optional
+from lxml import html, etree
+from .style_manager import StyleManager, CSSProcessor
 from .css_register import CSSRegistry
 from .block import Block
+from .helpers.fs import _write_file
 
 
 class HtmlDoc:
@@ -24,7 +28,7 @@ class HtmlDoc:
 
         # Optional links (only if passed)
         self.links = head_attrs.get("links", [])
-        
+
         # 🌟 CORRECCIÓN CRÍTICA: Inicializar atributos faltantes para evitar AttributeError
         self.inline_style = head_attrs.get("inline_style")
         self.head_scripts = head_attrs.get("head_scripts", [])
@@ -55,7 +59,8 @@ class HtmlDoc:
         return lines
 
     def _generate_base_html(self):
-        head_content = "\n\t".join(self._generate_head()) # Uso join para un mejor formato
+        # Uso join para un mejor formato
+        head_content = "\n\t".join(self._generate_head())
         return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,7 +82,7 @@ body {
 h1, h2, h3, h4, h5, h6, p, ul, ol, li {
     margin: 0;
     padding: 0;
-    line-height: 1; 
+    line-height: 1;
 }
 """
 
@@ -109,46 +114,129 @@ h1, h2, h3, h4, h5, h6, p, ul, ol, li {
     # ------------------------------
     # Document creation
     # ------------------------------
-    def create_document(self):
+    def create_document(self, output: Literal["file", "raw", "both"] = "file") -> Optional[Tuple[str, str]]:
+        """
+        Builds the final HTML and CSS documents and exports them according to the
+        specified output mode.
 
-        # Register CSS from blocks
+        This method is responsible for:
+        - Registering CSS styles from all registered blocks.
+        - Rendering the document body and inline scripts.
+        - Generating the final HTML and CSS outputs.
+
+        Output modes:
+            - "file": Writes the generated HTML and CSS to disk (default behavior).
+            - "raw": Returns the generated HTML and CSS as raw strings.
+            - "both": Writes the files to disk and also returns the raw outputs.
+
+        Args:
+            output (Literal["file", "raw", "both"], optional):
+                Determines how the generated document should be exported.
+                Defaults to "file".
+
+        Returns:
+            Optional[Tuple[str, str]]:
+                - ("raw"): Returns a tuple (html, css).
+                - ("both"): Returns a tuple (html, css).
+                - ("file"): Returns None.
+
+        Raises:
+            Exception:
+                Propagates any exception raised during file creation or style
+                application.
+        """
+
         for block in Block._registry:
             CSSRegistry.register_block(block)
 
-        # Render body
         body_content = self.render_body()
-
-        # Render body scripts
         body_scripts = "\n".join(
             f"<script>\n{code}\n</script>" for code in self._body_scripts
         )
 
-        # Build final HTML
         html_final = (
             self._html_base
             .replace("{body_content}", body_content)
             .replace("{body_scripts}", body_scripts)
         )
-
-        # Build final CSS
         css_final = self._css_base + "\n" + CSSRegistry.generate_css()
 
-        try:
-            with open(self.html_file, "w", encoding="utf-8") as f_html:
-                f_html.write(html_final)
+        if output in ("raw", "both"):
+            # return utf-8 strings
+            return {
+                "html": html_final,
+                "css": css_final
+            }
 
-            with open(self.css_file, "w", encoding="utf-8") as f_css:
-                f_css.write(css_final)
+        if output in ("file", "both"):
+            _write_file(self.html_file, html_final, "HTML")
+            _write_file(self.css_file, css_final, "CSS")
+            StyleManager(css_file=self.css_file).apply_styles()
+        return None
 
-            from .style_manager import StyleManager
-            # Note: StyleManager import might require careful handling of circular dependencies 
-            # if this class is used heavily within the module.
-            sm = StyleManager(css_file=self.css_file)
-            sm.apply_styles()
+    def bundle_document(self, output: Literal["file", "raw", "both"] = "file", filename: str = "bundle.html", ) -> Optional[str]:
+        """
+        Bundles HTML and CSS into a single self-contained HTML document by
+        injecting the CSS into a <style> tag inside the <head>.
 
-            print(f"✅ Documents created: {self.html_file} and {self.css_file}")
-        except Exception as e:
-            print(f"❌ Error creating files: {e}")
+        This method acts as a post-processor/exporter and does not render
+        blocks or generate styles by itself.
+
+        Args:
+            html_source (str):
+                The final rendered HTML source.
+            css_source (str):
+                The final generated CSS source.
+            output (Literal["file", "raw", "both"], optional):
+                Determines how the bundled document is exported.
+            filename (str, optional):
+                Output filename when writing to disk.
+
+        Returns:
+            Optional[str]:
+                - ("raw" | "both"): The bundled HTML document.
+                - ("file"): None.
+        """
+
+        for block in Block._registry:
+            CSSRegistry.register_block(block)
+
+        body_content = self.render_body()
+        body_scripts = "\n".join(
+            f"<script>\n{code}\n</script>" for code in self._body_scripts
+        )
+
+        html_final = (
+            self._html_base
+            .replace("{body_content}", body_content)
+            .replace("{body_scripts}", body_scripts)
+        )
+        css_final = self._css_base + "\n" + CSSRegistry.generate_css()
+        css_final = CSSProcessor.apply_rules(css_text=css_final)
+
+        # remove the link style.css from head and replace with <style> tag
+        tree = html.fromstring(html_final)
+        head = tree.find("head")
+
+        for link in head.findall("link"):
+            if link.get("rel") == "stylesheet" and link.get("href") == "style.css":
+                head.remove(link)
+
+        style_element = etree.Element("style")
+        style_element.text = css_final
+
+        head.append(style_element)
+        bundled_html = etree.tostring(
+            tree, pretty_print=True, method="html", encoding="unicode"
+        )
+
+        if output in ("raw", "both"):
+            return bundled_html
+
+        if output == "file":
+            _write_file(filename, bundled_html, "Bundled HTML")
+
+        return None
 
     # ------------------------------
     # Body align system

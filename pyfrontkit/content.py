@@ -18,7 +18,7 @@ class ContentItem:
 
     def render(self, indent: int = 0):
         space = " " * indent
-        
+
         # --- LOGIC FOR RAW TEXT (NO TAG) ---
         if self.tag == "none":
             html = ""
@@ -67,7 +67,7 @@ class ContentFactory:
         items = []
         for key, value in kwargs.items():
             if cls.is_ctn_key(key):
-                tag = key[4:] 
+                tag = key[4:]
 
                 if isinstance(value, tuple):
                     text = value[0] if len(value) > 0 else ""

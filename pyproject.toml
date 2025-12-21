@@ -1,18 +1,19 @@
-[build-system]
-requires = ["setuptools>=61.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "pyfrontkit"
 version = "1.1.6"
 description = "A Python tool to generate HTML and CSS with programmable syntax."
-readme = "README.md"
 
 authors = [
-    { name = "Eduardo Antonio Ferrera Rodríguez", email = "enzoferrera.23@gmail.com" },
+    { name = "Eduardo Antonio Ferrera Rodríguez", email = "enzoferrera.23@gmail.com" }
 ]
 
 license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.8"
+
+dependencies = [
+    "lxml>=6.0.2,<7.0.0"
+]
 
 keywords = ["html", "css", "python", "frontend", "mlops", "data app"]
 
@@ -27,6 +28,6 @@ Homepage = "https://github.com/Edybrown/pyfrontkit"
 Source = "https://github.com/Edybrown/pyfrontkit"
 Issues = "https://github.com/Edybrown/pyfrontkit/issues"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["pyfrontkit*"]
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

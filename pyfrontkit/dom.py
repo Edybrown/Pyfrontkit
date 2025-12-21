@@ -81,7 +81,6 @@ class DOMManager:
         self.snapshot = list(Block._registry)
 
 
-
 # Singleton DOM
 DOM = DOMManager()
 
