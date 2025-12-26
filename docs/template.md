@@ -1,24 +1,25 @@
 # Templates — PyFrontKit Documentation
-
 ## Overview
 
-In PyFrontKit, **templates are plain Python functions**.
+In PyFrontKit, **templates are plain Python functions — not files**.
 
-There is no separate template language, no hidden context, and no runtime engine.
-A template is simply a function that:
+There is no separate template language, no runtime engine, and no framework-specific adapter.
+A template is simply a Python function that:
 
 1. Builds a document using PyFrontKit blocks
 2. Calls `create_template()`
-3. Returns the rendered output
+3. Returns rendered HTML (and optionally CSS)
 
-This approach keeps templates:
+Because templates are functions, they are:
 
+* importable
 * reusable
 * testable
 * composable
-* fully integrated with Python logic
+* framework-agnostic
 
----
+The same template function can be used **unchanged** in Django, Flask, FastAPI, or any Python environment that needs HTML output.
+
 
 ## Why Templates Are Functions
 
@@ -34,6 +35,22 @@ Using Python functions allows you to:
 > A PyFrontKit template is just Python code that returns HTML (and CSS).
 
 ---
+
+## Templates as Application Code
+
+In PyFrontKit, templates are not treated as static assets.
+They are **application code**.
+
+This means templates can:
+
+* live next to business logic
+* be imported like any Python function
+* be versioned, tested, and composed
+* change behavior and layout dynamically based on data
+
+UI rendering becomes part of your Python architecture — not a separate layer with its own rules.
+
+
 
 ## Basic Template Example
 
