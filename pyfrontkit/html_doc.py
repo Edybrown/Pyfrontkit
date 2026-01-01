@@ -211,64 +211,78 @@ h1, h2, h3, h4, h5, h6, p, ul, ol, li {
         return self
     
 
+    
     def create_template(self, css=True, inline=True):
         """
-        Generates the document in memory for production.
-        
-        Args:
-            css (bool): If False, no dynamic CSS is generated or included.
-            inline (bool): If True, CSS is embedded in a <style> tag within the <head>.
-                          If False, returns a tuple (html, css) for separate serving.
-        
-        Returns:
-            str | tuple: The full HTML string, or a (html, css) tuple.
+        Genera el documento en memoria replicando la lógica de archivos físicos.
         """
-        # 1. Register structure from all blocks
+        # 1. Registrar CSS de bloques (Igual que create_document)
         for block in Block._registry:
             CSSRegistry.register_block(block)
 
-        # 2. Generate and Clean CSS (only if requested)
-        dynamic_css = ""
-        if css:
-            dynamic_css = CSSRegistry.generate_css() # This method already filters empty/comments
+        # 2. Renderizar contenido y scripts
+        body_content = self.render_body()
+        body_scripts = "\n".join(
+            f"<script>\n{code}\n</script>" for code in self._body_scripts
+        )
 
-        # 3. Handle CSS Inlining logic
+        # 3. Generar CSS Base + Bloques
+        dynamic_css = CSSRegistry.generate_css() if css else ""
+        css_acumulado = self._css_base + "\n" + dynamic_css
+
+        # 4. SIMULAR StyleManager.apply_styles en memoria
+        # Esto procesa las reglas de align() y otros métodos de estilo
+        from .style_manager import CSS_RULES_STYLE
+        
+        for rule in CSS_RULES_STYLE:
+            for selector, data in rule.items():
+                new_css = data.get("css", "").strip()
+                if not new_css:
+                    continue
+                
+                # Normalizar líneas (asegurar punto y coma)
+                new_lines = [line if line.endswith(";") else line + ";" 
+                            for line in new_css.splitlines() if line.strip()]
+                
+                # Lógica de inserción/reemplazo similar a StyleManager
+                import re
+                pattern = re.compile(rf"({re.escape(selector)}\s*\{{)([^}}]*)(\}})", re.MULTILINE)
+                match = pattern.search(css_acumulado)
+
+                if match:
+                    existing_css = match.group(2).strip()
+                    existing_lines = [line.strip() for line in existing_css.splitlines() if line.strip()]
+                    combined_lines = existing_lines + new_lines
+                    css_acumulado = (css_acumulado[:match.start(2)] + 
+                                   "\n    " + "\n    ".join(combined_lines) + 
+                                   "\n" + css_acumulado[match.end(2):])
+                else:
+                    css_acumulado += f"\n{selector} {{\n    " + "\n    ".join(new_lines) + "\n}}\n"
+
+        css_final = css_acumulado.replace("}}", "}")
+
+        # 5. Ensamblar HTML final
+        html_base_local = self._html_base
         style_tag = ""
-        full_css_content = f"{self._css_base}\n{dynamic_css}"
         
         if css and inline:
-            # We wrap the content in the <style> tag manually as requested
-            style_tag = f"\n<style>\n{full_css_content}\n</style>"
+            # Si es inline, inyectamos el CSS y quitamos el <link> externo
+            style_tag = f"\n<style>\n{css_final}\n</style>"
+            html_base_local = html_base_local.replace("<link rel='stylesheet' href='style.css'>", "")
+        
+        html_final = (
+            html_base_local
+            .replace("</head>", f"{style_tag}\n</head>" if style_tag else "</head>")
+            .replace("{body_content}", body_content)
+            .replace("{body_scripts}", body_scripts)
+        )
 
-        # 4. Render Body and Scripts
-        body_content = self.render_body()
-        body_scripts = "\n".join(f"<script>\n{c}\n</script>" for c in self._body_scripts)
-
-        # 5. Assemble HTML
-        # Note: If inline is False, {style_tag} will be empty
-        html_output = f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{self.title}</title>{style_tag}
-</head>
-<body>
-{body_content}
-{body_scripts}
-</body>
-</html>"""
-
-        # 6. CRITICAL: Global Cleanup for Production Statelessness
+        # 6. LIMPIEZA FINAL (Garantiza statelessness para la próxima generación)
         CSSRegistry.clear_registry()
         Block._registry.clear()
-        try:
-            from .style_manager import CSS_RULES_STYLE
-            CSS_RULES_STYLE.clear()
-        except ImportError:
-            pass
+        CSS_RULES_STYLE.clear()
 
-        # 7. Final Output logic
         if css and not inline:
-            return html_output, full_css_content
-        
-        return html_output
+            return html_final, css_final
+
+        return html_final
